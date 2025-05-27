@@ -1,4 +1,4 @@
-package kjstyle.jwtloginsample.common;
+package kjstyle.techdom.common;
 
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.context.SpringBootTest;

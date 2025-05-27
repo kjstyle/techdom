@@ -1,4 +1,4 @@
-package kjstyle.techdom.domain.repository;
+package kjstyle.techdom.domain.repository.entitys;
 
 import jakarta.persistence.*;
 import lombok.*;

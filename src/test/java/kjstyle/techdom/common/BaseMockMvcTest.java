@@ -1,4 +1,4 @@
-package kjstyle.jwtloginsample.common;
+package kjstyle.techdom.common;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
