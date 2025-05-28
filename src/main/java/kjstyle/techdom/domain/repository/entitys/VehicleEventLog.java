@@ -54,7 +54,7 @@ public class VehicleEventLog {
     private Integer speed;
 
     @Column(name = "current_accumulated_distance")
-    private Long currentAccumulatedDistance;
+    private Long currentAccumulatedDistance; // Total distance traveled by vehicle in meters
 
     @Column(name = "battery_volt")
     private Integer batteryVolt;
@@ -62,7 +62,13 @@ public class VehicleEventLog {
     @Column(name = "on_time")
     private OffsetDateTime onTime;
 
-    @Column(name = "ignition_off_time")
+    /**
+     * 차량의 시동이 꺼진 시각(시동 OFF 이벤트 발생 시각)
+     * - UTC 기준 시각으로 저장됨
+     * - 운행 종료 시점 기록용으로 사용
+     * - {@link VehicleEventType#IGNITION_OFF} 이벤트와 연관됨
+     */
+    @Column(name = "ignition_off_time") // 시동 꺼짐 이벤트 발생 시각 (UTC)
     private OffsetDateTime ignitionOffTime;
 
     @Column(name = "geofence_group_id", length = 20)
