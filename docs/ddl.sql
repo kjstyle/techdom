@@ -481,7 +481,7 @@ CREATE TABLE IF NOT EXISTS vehicle_event_log (
     longitude NUMERIC(9,6),                                  -- GPS 경도
     angle INTEGER,                                           -- 방향 (0-365도)
     speed INTEGER,                                           -- 속도 (km/h, 0-255)
-    current_accumulated_distance BIGINT,                     -- 현재 시점의 누적 주행 거리 (미터, 0-9999999)
+    current_accumulated_distance BIGINT,                     -- 현재 시점의 누적 주행 거리 (km)
     battery_volt INTEGER,                                    -- 배터리 전압 (실제값X10, V)
     on_time TIMESTAMP WITH TIME ZONE,                        -- 시동 ON 이벤트 발생 시 시간
     ignition_off_time TIMESTAMP WITH TIME ZONE,              -- 시동 OFF 이벤트 발생 시 시간
@@ -521,18 +521,17 @@ CREATE INDEX IF NOT EXISTS idx_vehicle_event_log_mdn_time ON vehicle_event_log (
 -- 2-1. 60초 주기 주행기록 테이블 (driving_log) - TimescaleDB 하이퍼테이블
 -- 단말로부터 60초 주기마다 수신되는 주행 기록을 저장합니다.
 CREATE TABLE IF NOT EXISTS driving_log (
-                                           record_time TIMESTAMP WITH TIME ZONE NOT NULL,   -- 기록 시간 (초 단위, TimescaleDB 시계열 키)
-                                           mdn VARCHAR(20) NOT NULL,                        -- 단말 식별자 (device.mdn 참조)
+    record_time TIMESTAMP WITH TIME ZONE NOT NULL,   -- 기록 시간 (초 단위, TimescaleDB 시계열 키)
+    mdn VARCHAR(20) NOT NULL,                        -- 단말 식별자 (device.mdn 참조)
     gps_condition gps_condition_enum NOT NULL,       -- GPS 상태 (ENUM 사용)
     latitude NUMERIC(9,6),                           -- 위도
     longitude NUMERIC(9,6),                          -- 경도
     angle INTEGER,                                   -- 방향 (0-365도)
     speed INTEGER,                                   -- 속도 (km/h)
-    total_distance BIGINT,                           -- 누적 거리 (m)
+    total_distance BIGINT,                           -- 누적 거리 (km)
     battery_volt INTEGER,                            -- 배터리 전압 (실제값X10)
-    PRIMARY KEY (record_time, mdn),                  -- 복합 기본 키 (하이퍼테이블용)
-    FOREIGN KEY (mdn) REFERENCES device (mdn) ON DELETE CASCADE
-    );
+    PRIMARY KEY (record_time, mdn)                   -- 복합 기본 키 (하이퍼테이블용)
+);
 
 COMMENT ON TABLE driving_log IS '단말로부터 60초 주기마다 수신되는 주행 기록을 저장하는 테이블';
 COMMENT ON COLUMN driving_log.record_time IS '기록 시간 (초 단위, TimescaleDB 하이퍼테이블의 시계열 키)';
