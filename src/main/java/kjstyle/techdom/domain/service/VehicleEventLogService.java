@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -32,33 +33,29 @@ public class VehicleEventLogService {
             List<VehicleEventHandler> handlers // Spring이 모든 VehicleEventHandler 구현체를 리스트로 주입
     ) {
         this.vehicleEventLogRepository = vehicleEventLogRepository;
+
+        // 이벤트 타입에 대한 VehicleEventHandler 객체를 Map으로 저장
         this.eventHandlers = handlers.stream()
                 .collect(Collectors.toMap(VehicleEventHandler::getEventType, Function.identity()));
     }
 
-    /**
-     * 차량 이벤트 로그 항목을 영속성 저장소에 저장합니다.
-     *
-     * @param vehicleEventLog 저장할 차량 이벤트 로그 엔티티
-     * @return 생성된 ID 또는 업데이트된 필드가 포함된 저장된 차량 이벤트 로그 엔티티
-     */
     public VehicleEventLog saveEventLog(VehicleEventLog vehicleEventLog) {
         return vehicleEventLogRepository.save(vehicleEventLog);
     }
 
     public void processVehicleEvent(VehicleEventLog eventLog) throws VehicleEventHandleException {
-        log.info("MDN: " + eventLog.getMdn() + " 이벤트 수신 {}", eventLog);
+        log.info("MDN: {} 이벤트 수신 {}", eventLog.getMdn(), eventLog);
 
         VehicleEventHandler handler = eventHandlers.get(eventLog.getEventType());
         if (handler != null) {
             handler.handle(eventLog);
         } else {
             log.error("지원하지 않는 이벤트 타입입니다.");
-            throw new VehicleEventHandleException("지원하지 않는 이벤트 타입입니다.", "400", null);
+            throw new VehicleEventHandleException("지원하지 않는 이벤트 타입입니다.");
         }
-
-        System.out.println("MDN: " + eventLog.getMdn() + " 이벤트 처리 완료.");
     }
 
-
+    public Optional<VehicleEventLog> findTopByMdnAndEventTypeOrderByEventTimestampUtcDesc(String mdn, VehicleEventType eventType) {
+        return vehicleEventLogRepository.findTopByMdnAndEventTypeOrderByEventTimestampUtcDesc(mdn, eventType);
+    }
 }

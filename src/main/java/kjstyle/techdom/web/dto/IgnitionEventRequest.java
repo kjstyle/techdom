@@ -19,7 +19,7 @@ import java.time.format.DateTimeParseException;
 @Getter
 @Setter
 @ToString
-public class VehicleIgnitionEventRequest {
+public class IgnitionEventRequest {
 
     // 공통 필수 필드
     @NotBlank(message = "mdn은 필수 값입니다.")
@@ -86,11 +86,10 @@ public class VehicleIgnitionEventRequest {
      * VehicleIgnitionEventRequest DTO를 VehicleEventLog 엔티티로 변환하는 메서드.
      * 시동 ON/OFF 이벤트에 특화된 매핑을 수행합니다.
      *
-     * @param rawJsonData 원본 JSON 문자열 (로그 저장용)
      * @return VehicleEventLog 엔티티
      * @throws IllegalArgumentException 파싱 오류 발생 시
      */
-    public VehicleEventLog toVehicleEventLog(String rawJsonData) {
+    public VehicleEventLog toVehicleEventLog() {
         try {
             // 날짜/시간 파싱
             LocalDateTime parsedOnTime = LocalDateTime.parse(this.onTime, FORMATTER);
@@ -136,7 +135,6 @@ public class VehicleIgnitionEventRequest {
                     .batteryVolt(parsedBatteryVolt) // null 허용
                     .onTime(onTimeOffset) // null 허용
                     .ignitionOffTime(ignitionOffTimeOffset) // null 허용
-                    .rawJsonData(rawJsonData)
                     .build();
 
         } catch (DateTimeParseException e) {

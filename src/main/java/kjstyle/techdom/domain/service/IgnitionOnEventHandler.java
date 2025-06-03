@@ -36,28 +36,19 @@ public class IgnitionOnEventHandler implements VehicleEventHandler{
             lastOffEvent.ifPresentOrElse(
                     prevOffEvent ->{
                         eventLog.adjustGpsPosition(prevOffEvent.getLatitude(), prevOffEvent.getLongitude());
-                        log.info("직전 시동 OFF ({})의 위경도({}, {})를 참조합니다. 현재 이벤트의 위경도와 비교/보정 로직 필요.",
+                        log.info("직전 시동 OFF ({})의 위경도({}, {})로 현재 이벤트를 수정. 시동OFF한 곳에서 시동을 다시 걸겠지..",
                                 prevOffEvent.getEventTimestampUtc(), prevOffEvent.getLatitude(), prevOffEvent.getLongitude());
                     },
-                    () -> log.error("직전 시동 OFF 정보가 없습니다.")
+                    () -> log.error("직전 시동 OFF 정보가 없습니다.") // TODO : 최초 시동일 경우일 것 같은데....error로 해야할 것인가...
             );
         }
 
         // 규격서: "설치 후, 최초 시동 ON의 경우 그 전에 저장된 GPS 데이터가 없기 때문에 위경도 없이 보낸다. (상태값은 V, GPS 장치 인식 안된 경우는 0)"
         long ignitionOnCount = vehicleEventLogRepository.countByMdnAndEventType(eventLog.getMdn(), VehicleEventType.IGNITION_ON);
-        boolean isFirstOn = ignitionOnCount == 0L;
-        boolean isAbnormalGps =
-                (eventLog.getGpsStatus() == GpsCondition.ABNORMAL || eventLog.getGpsStatus() == GpsCondition.NOT_INSTALLED)
-                &&
-                (eventLog.getLatitude() == 0.0 || eventLog.getLongitude() == 0.0);
+        boolean isOnForTheFirstTime = ignitionOnCount == 0L;
 
-        if (isFirstOn) {
-            if (isAbnormalGps) {
-                log.info("최초 시동이라 위경도 없음");
-            } else {
-                log.error("최초 시동 ON 규격 불일치 {}", eventLog);
-                throw new VehicleEventHandleException("최초 시동 ON 규격 불일치", "400", HttpStatus.BAD_REQUEST);
-            }
+        if (isOnForTheFirstTime) {
+            eventLog.adjustGpsPosition(0.0, 0.0);
         }
 
         vehicleEventLogRepository.save(eventLog);

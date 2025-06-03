@@ -11,9 +11,7 @@ public class VehicleEventHandleException extends RuntimeException {
     private String errorCode;
     private HttpStatus httpStatus;
 
-    public VehicleEventHandleException(String message, String errorCode, HttpStatus httpStatus) {
+    public VehicleEventHandleException(String message) {
         super(message);
-        this.errorCode = errorCode;
-        this.httpStatus = httpStatus;
     }
 }
