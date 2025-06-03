@@ -1,51 +1,123 @@
-## 🚗 차량 관제 및 쉐어링 서비스 플랫폼 (Vehicle Tracking & Sharing Service Platform)
+# Vehicle Event Management System
 
-본 프로젝트는 렌터카 및 쉐어링카, 법인 차량 등의 효율적인 관제를 위한 차량 관제 서비스를 개발합니다. 차량의 운행 정보(위치, 시동 ON/OFF 등)를 실시간으로 수집, 저장하고 웹 서비스를 통해 조회 및 관리할 수 있는 플랫폼을 목표로 합니다.
+이 프로젝트는 차량의 다양한 이벤트(시동 ON/OFF, 지오펜싱, 주기적 보고 등)를 기록하고 관리하는 시스템입니다.  
+타임스탬프 기반의 시계열 데이터 저장, 이벤트 핸들러, 테스트 케이스를 포함하여 유지보수와 확장성을 고려한 설계가 이루어졌습니다.
 
-### 📜 프로젝트 개요 및 배경
+---
 
-현재 개인 차량 보유 대신 렌트/쉐어링 서비스를 이용하는 경우가 많아지고 있으며, 법인 차량 관리의 어려움 또한 증가하고 있습니다. 이러한 문제를 해결하고자 차량 관제 플랫폼을 기획/개발합니다.
+## 주요 기술 스택
 
-**주요 목표:**
-* 등록된 차량의 운행 시간, 이동 경로 등을 확인하여 차량의 정상적인 사용 여부 검증
-* 법인 차량의 주행 기록 기반 운행일지 자동 작성
-* 운행 거리/시간에 따른 소모품 관리 지원
+- **Backend Framework**: Jakarta EE, Spring MVC, Spring Data JPA
+- **Programming Language**: Java 21
+- **Database**: PostgreSQL (TimescaleDB 확장)
+- **Testing Framework**: JUnit 5, Mockito
+- **Object-Relational Mapping**: Hibernate
+- **Utilities**: Lombok, Jackson, Jakarta Persistence
 
-### 🎯 프로젝트 달성 목표
+---
 
-**[기획]**
-1.  차량(단말)과 서버 간 통신 규약 정의 (이벤트 정보: 시동 ON/OFF, 주기 정보: 주행 위치(GPS) 등)
-2.  차량(단말)과 연계된 업체 및 사용자 매칭 및 사용자별 차량 정보 확인 기능 제공
-3.  차량 정보는 권한이 있는 업체 및 사용자만 확인 가능하도록 구현
-4.  차량 정보(이벤트 정보, 주기 정보)를 구분하여 확인 가능
+## 주요 기능
 
-**[개발]**
-1.  **구성:** 차량(단말) 에뮬레이터, 차량 정보를 수집하는 서버(Backend), 수집된 정보를 표시하는 웹 서비스(Frontend)
-2.  **에뮬레이터:** GPS 정보 생성, 연동 규격에 맞는 통신 전문 생성 및 서버 전달
-3.  **주기 정보 전달:** 1초에 1건 생성, 60초/120초/180초 주기로 서버 전달 설정 가능
-4.  **정보 전달 순서:** 시동 ON -> 주기 정보 -> 시동 OFF 순서 기본, 순서 변경 없도록 보장
-5.  **서버 저장:** 차량 정보는 차량별로 구분 가능해야 함
-6.  **서버 수용량:** 애뮬레이터 정보 동시 15,000건 수용 가능해야 함
-7.  **웹 서비스 (차량/사용자/업체 관리):** 차량/사용자/업체 등록 및 매핑 기능 제공
-8.  **웹 서비스 (차량 정보 확인):** 운행 정보 확인, 사용자/업체 권한에 따라 차량 정보를 확인 할 수 있어야 합니다.
+### 1. 차량 이벤트 로그 기록
+- 모든 차량 이벤트(시동 ON/OFF, 지오펜스 진입/이탈 등)를 **TimescaleDB**를 활용해 시계열 데이터로 관리합니다.
+- 주요 이벤트 유형:
+  - `IGNITION_ON`: 시동 ON 이벤트
+  - `IGNITION_OFF`: 시동 OFF 이벤트
+  - `GEOFENCE_IN`: 지오펜스 진입 이벤트
+  - `GEOFENCE_OUT`: 지오펜스 이탈 이벤트
+  - `PERIODIC_REPORT`: 주기적 차량 상태 보고
 
-### ✨ 주요 기능 요구사항
+### 2. 고도로 확장 가능한 테이블 및 ENUM 정의
+- 차량, 지오펜스, 정책 등의 관리를 위한 다수의 관계형 테이블과 **ENUM** 기반 데이터 타입 제공.
+- `GpsCondition`, `VehicleEventType` 등 명확한 데이터 유형 관리.
 
-1.  **통신 규약:** 애뮬레이터와 서버 간 통신 규약 정의 및 구현 (이벤트, 주기 정보 필수)
-2.  **애뮬레이터:** GPS 정보 생성 및 서버로 특정 주기(60초, 120초, 180초)마다 차량 정보 송신
-3.  **서버:** 애뮬레이터로부터 전달받은 차량 정보를 차량별로 수신하여 저장 (동시 10,000개 통신 이상 수용)
-4.  **차량 정보 생성 및 매핑:** 업체, 사용자, 차량 정보 생성 및 매핑 기능
-5.  **차량 정보 확인:** 등록된 차량 정보를 기준으로 애뮬레이터로부터 전달받은 차량 위치 정보를 지도에 표시
+### 3. 이벤트 핸들러
+- 실제 차량 이벤트 처리 로직을 담당하는 핸들러로 구성.
+  - 각 이벤트 타입별: 예를 들어 `IgnitionOnEventHandler`, `IgnitionOffEventHandler`
+  - 비즈니스 규칙 적용 및 예외 처리.
 
-### 🛠️ 기술 스택
+### 4. 테스트
+- **Unit Test**와 **Mock Test**로 다양한 이벤트 처리 로직을 검증.
+- 주요 테스트 케이스:
+  - 시동 ON 핸들러 (`IgnitionOnEventHandlerTest`)
+  - 시동 OFF 핸들러 (`IgnitionOffEventHandlerTest`)
 
-**Backend:**
-* **Language:** Java 21
-* **Framework:** Spring Boot 3.5.0
-* **ORM:** Spring Data JPA
-* **Database:**
-    * **Production/Deployment:** PostgreSQL + TimescaleDB Extension
-    * **Local Development:** H2 Database (인메모리 모드 또는 파일 기반)
-* **Build Tool:** Maven
-* **Messaging (Recommended for scale):** Apache Kafka or RabbitMQ (Spring Integration/Spring Cloud Stream 활용)
-* **Logging:** SLF4j / Logback
+---
+
+## 데이터베이스 설계
+
+### 주요 테이블
+1. **`vehicle_event_log`**
+   - 차량 이벤트 정보를 시계열로 저장.
+   - 주요 컬럼:
+     - `event_timestamp_utc`: 이벤트 발생 UTC 시간.
+     - `event_type`: 이벤트 종류(`IGNITION_ON`, `IGNITION_OFF` 등).
+     - `gps_status`: GPS 상태(`NORMAL`, `ABNORMAL`, `NOT_INSTALLED` 등).
+     - `latitude`/`longitude`: 차량 위치 데이터.
+
+2. **`vehicle_info`**
+   - 차량 기본 정보 저장.
+   - 주요 컬럼:
+     - `mdn`: 차량 ID.
+     - `last_latitude`/`last_longitude`: 마지막 위치 정보.
+     - `total_accumulated_distance`: 누적 주행 거리.
+
+3. **ENUM 타입**
+   - `GpsCondition` (`A`, `V`, `P` 등).
+   - `VehicleEventType` (`IGNITION_ON`, `GEOFENCE_IN` 등).
+
+---
+
+## 이벤트 핸들러
+
+### 1. IgnitionOnEventHandler
+- 시동 ON 이벤트 처리 로직.
+- 주요 로직:
+  - 이전 시동 OFF 이벤트 조회.
+  - GPS 상태에 따라 알림 로깅.
+
+### 2. IgnitionOffEventHandler
+- 시동 OFF 이벤트 처리 로직.
+- 주요 로직:
+  - 누적 주행 거리 업데이트.
+  - 직전 시동 ON 이벤트 확인 및 로그.
+
+---
+
+## 테스트
+
+### 주요 테스트 케이스
+1. **IgnitionOnEventHandlerTest**
+   - 일반적인 시동 ON 이벤트 처리.
+   - GPS 상태 이상 시 경고 로그 처리.
+   - 최초 시동 ON 이벤트 처리 로직 검증.
+
+2. **IgnitionOffEventHandlerTest**
+   - 일반적인 시동 OFF 이벤트 처리.
+   - 직전 시동 ON 이벤트 확인 로직 검증.
+   - 최초 시동 OFF 이벤트 규격 확인.
+
+---
+
+
+## 사용법
+
+### 1. 프로젝트 실행
+1. **데이터베이스 준비**:
+   - PostgreSQL 및 TimescaleDB 확장 설치.
+   - `ddl.sql`을 실행하여 기본 테이블과 트리거 생성.
+
+2. **애플리케이션 실행**:
+   - IDE (예: IntelliJ IDEA)에서 실행.
+   - Spring Boot 실행 명령:
+     ```bash
+     ./mvnw spring-boot:run
+     ```
+
+### 2. 테스트 실행
+- `mvn test` 명령을 통해 모든 테스트 실행.
+- 개별 클래스 테스트:
+  - `IgnitionOnEventHandlerTest`
+  - `IgnitionOffEventHandlerTest`
+
+---
