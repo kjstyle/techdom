@@ -79,6 +79,7 @@ public class VehicleEventLog {
     private String eventValue;
 
     @Column(name = "raw_json_data", columnDefinition = "JSONB")
+    @Setter
     private String rawJsonData;
 
     public void adjustGpsPosition(Double newLat, Double newLon) {

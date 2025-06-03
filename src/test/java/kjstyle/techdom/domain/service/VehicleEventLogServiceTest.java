@@ -42,18 +42,20 @@ class VehicleEventLogServiceTest extends BaseTest {
         OffsetDateTime now = OffsetDateTime.now(ZoneOffset.UTC); // 현재 UTC 시간
         String mdn = "01099998888"; // 테스트용 MDN
 
-        eventLogToSave.setEventTimestampUtc(now);
-        eventLogToSave.setMdn(mdn);
-        eventLogToSave.setEventType(VehicleEventType.IGNITION_ON); // 시동 ON 이벤트
-        eventLogToSave.setEventSecond(now.getSecond());
-        eventLogToSave.setGpsStatus(GpsCondition.NORMAL);
-        eventLogToSave.setLatitude(37.123456);
-        eventLogToSave.setLongitude(127.654321);
-        eventLogToSave.setAngle(180);
-        eventLogToSave.setSpeed(0); // 시동 ON 시 속도는 0
-        eventLogToSave.setCurrentAccumulatedDistance(100000L);
-        eventLogToSave.setBatteryVolt(120);
-        eventLogToSave.setOnTime(now); // 시동 ON 시간
+        eventLogToSave = VehicleEventLog.builder()
+                .eventTimestampUtc(now)
+                .mdn(mdn)
+                .eventType(VehicleEventType.IGNITION_ON)
+                .eventSecond(now.getSecond())
+                .gpsStatus(GpsCondition.NORMAL)
+                .latitude(37.123456)
+                .longitude(127.654321)
+                .angle(180)
+                .speed(0)
+                .currentAccumulatedDistance(100000L)
+                .batteryVolt(120)
+                .onTime(now)
+                .build();
 
         try {
             // ObjectMapper는 기본적으로 getter 메서드를 사용하여 객체를 JSON으로 변환합니다.
