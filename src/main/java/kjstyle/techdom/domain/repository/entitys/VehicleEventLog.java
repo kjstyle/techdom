@@ -2,10 +2,7 @@ package kjstyle.techdom.domain.repository.entitys;
 
 import kjstyle.techdom.enums.GpsCondition;
 import kjstyle.techdom.enums.VehicleEventType;
-import lombok.NoArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -19,8 +16,9 @@ import java.time.OffsetDateTime;
 @IdClass(VehicleEventLogId.class)
 @NoArgsConstructor
 @Getter
-@Setter
 @ToString
+@AllArgsConstructor
+@Builder
 public class VehicleEventLog {
 
     @Id
@@ -82,4 +80,9 @@ public class VehicleEventLog {
 
     @Column(name = "raw_json_data", columnDefinition = "JSONB")
     private String rawJsonData;
+
+    public void adjustGpsPosition(Double newLat, Double newLon) {
+        this.latitude = newLat;
+        this.longitude = newLon;
+    }
 }

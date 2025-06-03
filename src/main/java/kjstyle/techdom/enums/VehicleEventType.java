@@ -13,9 +13,14 @@ public enum VehicleEventType {
      */
     CAR_STOP,
     /**
-     * 지오펜스(가상 경계) 진입/이탈을 나타내는 이벤트
+     * 지오펜스(가상 경계) 진입을 나타내는 이벤트
      */
-    GEOFENCE,
+    GEOFENCE_IN,
+
+    /**
+     * 지오펜스(가상 경계) 이탈을 나타내는 이벤트
+     */
+    GEOFENCE_OUT,
     /**
      * 주기적인 차량 상태 보고 이벤트
      */

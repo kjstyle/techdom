@@ -1,30 +1,30 @@
 spring:
   datasource:
-    # H2 ?????? ??
+    # H2 데이터베이스 설정
     url: jdbc:h2:mem:testdb;MODE=PostgreSQL;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
     driver-class-name: org.h2.Driver
     username: sa
     password:
 
   jpa:
-    # JPA ??
+    # JPA 설정
     hibernate:
-      ddl-auto: update # ?????? ?? ? Entity ???? ??? ????
+      ddl-auto: update # 애플리케이션 시작 시 Entity를 기반으로 데이터베이스 스키마를 업데이트
       naming:
-        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl # ???, ???? ??? ??
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl # 물리적 네이밍 전략 설정 (기본값 사용)
     properties:
       hibernate:
-        format_sql: true # SQL ?? ??? ??? ?? ???
-        highlight_sql: true # ??? ???? SQL ?????
-        dialect: org.hibernate.dialect.PostgreSQLDialect # H2?? PostgreSQL ??? ????? ?? (TimescaleDB?? ???)
-    show-sql: true # ??? SQL ?? ??
+        format_sql: true # SQL을 읽기 쉽게 포맷팅
+        highlight_sql: true # 실행되는 SQL을 하이라이트하여 출력
+        dialect: org.hibernate.dialect.PostgreSQLDialect # H2 데이터베이스를 PostgreSQL 모드로 사용 (TimescaleDB를 위해 설정)
+    show-sql: true # 실행되는 SQL 로그 출력
 
   h2:
     console:
-      enabled: true # H2 ?? ???
-      path: /h2-console # H2 ?? ?? ?? (?: http://localhost:8080/h2-console)
+      enabled: true # H2 콘솔 활성화
+      path: /h2-console # H2 콘솔 경로 설정 (예: http://localhost:8080/h2-console)
 
 logging:
   level:
-    org.hibernate.SQL: DEBUG # ???? ?? SQL ?? ??
-    org.hibernate.orm.jdbc.bind: TRACE # SQL ??? ???? ??
+    org.hibernate.SQL: DEBUG # 실행되는 SQL 로그 레벨 설정
+    org.hibernate.orm.jdbc.bind: TRACE # SQL 바인딩 값 로깅

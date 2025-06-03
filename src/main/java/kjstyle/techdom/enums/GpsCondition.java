@@ -12,12 +12,12 @@ public enum GpsCondition {
      * NORMAL("A") - GPS 장치가 정상 작동중인 상태
      * ABNORMAL("V") - GPS 장치가 비정상 작동중인 상태
      * NOT_INSTALLED("0") - GPS 장치가 미설치된 상태
-     * IGNITION_ABNORMAL("P") - 시동 ON/OFF 시 GPS 장치가 비정상인 상태
+     * ABNORMAL_ON_IGNITION("P") - 시동 ON/OFF 시 GPS 장치가 비정상인 상태
      */
     NORMAL("A"),
     ABNORMAL("V"),
     NOT_INSTALLED("0"),
-    IGNITION_ABNORMAL("P");
+    ABNORMAL_ON_IGNITION("P");
 
     /**
      * 데이터베이스에 저장될 GPS 상태 코드값
