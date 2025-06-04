@@ -1,8 +1,8 @@
 package kjstyle.techdom.domain.service;
 
+import kjstyle.techdom.domain.entitys.DrivingLog;
 import kjstyle.techdom.domain.repository.DrivingLogCustomRepository;
 import kjstyle.techdom.domain.repository.DrivingLogRepository;
-import kjstyle.techdom.domain.repository.entitys.DrivingLog;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

@@ -1,8 +1,8 @@
 package kjstyle.techdom.domain.repository;
 
 import kjstyle.techdom.common.BaseTest;
-import kjstyle.techdom.domain.repository.entitys.DrivingLog;
-import kjstyle.techdom.domain.repository.entitys.DrivingLogId;
+import kjstyle.techdom.domain.entitys.DrivingLog;
+import kjstyle.techdom.domain.entitys.DrivingLogId;
 import kjstyle.techdom.enums.GpsCondition;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,14 +11,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 class DrivingLogCustomRepositoryImplTest extends BaseTest {
 

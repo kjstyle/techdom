@@ -1,14 +1,10 @@
-package kjstyle.techdom.domain.repository.entitys;
+package kjstyle.techdom.domain.entitys;
 
+import jakarta.persistence.*;
 import kjstyle.techdom.enums.GpsCondition;
 import kjstyle.techdom.enums.VehicleEventType;
 import lombok.*;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.IdClass;
-import jakarta.persistence.Table;
 import java.time.OffsetDateTime;
 
 @Entity

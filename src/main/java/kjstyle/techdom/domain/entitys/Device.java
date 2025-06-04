@@ -1,7 +1,10 @@
-package kjstyle.techdom.domain.repository.entitys;
+package kjstyle.techdom.domain.entitys;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.time.OffsetDateTime;
 

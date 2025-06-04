@@ -3,7 +3,7 @@ package kjstyle.techdom.domain.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import kjstyle.techdom.common.BaseTest;
-import kjstyle.techdom.domain.repository.entitys.VehicleEventLog;
+import kjstyle.techdom.domain.entitys.VehicleEventLog;
 import kjstyle.techdom.enums.GpsCondition;
 import kjstyle.techdom.enums.VehicleEventType;
 import org.junit.jupiter.api.DisplayName;

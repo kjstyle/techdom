@@ -1,6 +1,6 @@
 package kjstyle.techdom.domain.repository;
 
-import kjstyle.techdom.domain.repository.entitys.DrivingLog;
+import kjstyle.techdom.domain.entitys.DrivingLog;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;

@@ -1,7 +1,7 @@
 package kjstyle.techdom.domain.repository;
 
-import kjstyle.techdom.domain.repository.entitys.VehicleEventLog;
-import kjstyle.techdom.domain.repository.entitys.VehicleEventLogId;
+import kjstyle.techdom.domain.entitys.VehicleEventLog;
+import kjstyle.techdom.domain.entitys.VehicleEventLogId;
 import kjstyle.techdom.enums.VehicleEventType;
 import org.springframework.data.jpa.repository.JpaRepository;
 

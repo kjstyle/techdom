@@ -1,4 +1,4 @@
-package kjstyle.techdom.domain.repository.entitys;
+package kjstyle.techdom.domain.entitys;
 
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;

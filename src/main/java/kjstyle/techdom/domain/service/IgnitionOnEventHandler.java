@@ -1,13 +1,11 @@
 package kjstyle.techdom.domain.service;
 
-import kjstyle.techdom.domain.exceptions.VehicleEventHandleException;
+import kjstyle.techdom.domain.entitys.VehicleEventLog;
 import kjstyle.techdom.domain.repository.VehicleEventLogRepository;
-import kjstyle.techdom.domain.repository.entitys.VehicleEventLog;
 import kjstyle.techdom.enums.GpsCondition;
 import kjstyle.techdom.enums.VehicleEventType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
@@ -28,7 +26,7 @@ public class IgnitionOnEventHandler implements VehicleEventHandler{
     public void handle(VehicleEventLog eventLog) {
 
         // 규격서: "시동 ON 시 GPS 상태가 정상적이지 않으면, GPS 상태 값(gcd)을 ‘P’로 설정하고, 직전 시동 OFF 때의 GPS 위치 정보를 보낸다."
-        // 규격서: "위경도 값은 직전 시동 OFF의 위경도 값으로 설정한다."
+        // 규격서: "  ㄴ 위경도 값은 직전 시동 OFF의 위경도 값으로 설정한다."
         if (eventLog.getGpsStatus() == GpsCondition.ABNORMAL_ON_IGNITION) {
             // TODO: DB에서 직전 시동 OFF의 위경도(lat, lon)를 조회하여 eventLog의 lat/lon과 비교하거나 보정하는 로직 추가
             Optional<VehicleEventLog> lastOffEvent = vehicleEventLogRepository.findTopByMdnAndEventTypeOrderByEventTimestampUtcDesc(eventLog.getMdn(), VehicleEventType.IGNITION_OFF);

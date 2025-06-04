@@ -3,7 +3,7 @@ package kjstyle.techdom.web.dto;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
-import kjstyle.techdom.domain.repository.entitys.VehicleEventLog;
+import kjstyle.techdom.domain.entitys.VehicleEventLog;
 import kjstyle.techdom.enums.GpsCondition;
 import kjstyle.techdom.enums.VehicleEventType;
 import lombok.Getter;
