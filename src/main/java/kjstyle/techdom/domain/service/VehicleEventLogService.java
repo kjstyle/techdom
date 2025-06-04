@@ -7,6 +7,7 @@ import kjstyle.techdom.enums.VehicleEventType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -22,6 +23,7 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @Service
+@Transactional(readOnly = true)
 public class VehicleEventLogService {
     private final VehicleEventLogRepository vehicleEventLogRepository;
 
@@ -39,10 +41,12 @@ public class VehicleEventLogService {
                 .collect(Collectors.toMap(VehicleEventHandler::getEventType, Function.identity()));
     }
 
+    @Transactional(readOnly = false)
     public VehicleEventLog saveEventLog(VehicleEventLog vehicleEventLog) {
         return vehicleEventLogRepository.save(vehicleEventLog);
     }
 
+    @Transactional(readOnly = false)
     public void processVehicleEvent(VehicleEventLog eventLog) throws VehicleEventHandleException {
         log.info("MDN: {} 이벤트 수신 {}", eventLog.getMdn(), eventLog);
 
@@ -54,7 +58,7 @@ public class VehicleEventLogService {
             throw new VehicleEventHandleException("지원하지 않는 이벤트 타입입니다.");
         }
     }
-
+    
     public Optional<VehicleEventLog> findTopByMdnAndEventTypeOrderByEventTimestampUtcDesc(String mdn, VehicleEventType eventType) {
         return vehicleEventLogRepository.findTopByMdnAndEventTypeOrderByEventTimestampUtcDesc(mdn, eventType);
     }

@@ -92,12 +92,11 @@ public class GeofenceEventRequest {
      * GeofenceEventRequest DTO를 VehicleEventLog 엔티티로 변환하는 메서드.
      * 지오펜싱 IN/OUT 이벤트에 특화된 매핑을 수행합니다.
      *
-     * @param rawJsonData 원본 JSON 문자열 (로그 저장용)
      * @param eventType   컨트롤러에서 명시적으로 전달하는 이벤트 타입 (GEOFENCE_IN 또는 GEOFENCE_OUT)
      * @return VehicleEventLog 엔티티
      * @throws IllegalArgumentException 파싱 오류 발생 시
      */
-    public VehicleEventLog toVehicleEventLog(String rawJsonData, VehicleEventType eventType) {
+    public VehicleEventLog toVehicleEventLog(VehicleEventType eventType) {
         try {
             // 날짜/시간 파싱
             LocalDateTime parsedEventTime = LocalDateTime.parse(this.eventTime, FORMATTER);
@@ -129,7 +128,6 @@ public class GeofenceEventRequest {
                     // 시동 관련 필드는 지오펜싱 이벤트에서는 사용하지 않으므로 빌더에서 설정하지 않음 (기본값 null)
                     .onTime(null)
                     .ignitionOffTime(null)
-                    .rawJsonData(rawJsonData)
                     .build();
 
         } catch (DateTimeParseException e) {
