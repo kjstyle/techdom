@@ -39,16 +39,12 @@ public class IgnitionOnEventHandler implements VehicleEventHandler{
                         log.info("직전 시동 OFF ({})의 위경도({}, {})로 현재 이벤트를 수정. 시동OFF한 곳에서 시동을 다시 걸겠지..",
                                 prevOffEvent.getEventTimestampUtc(), prevOffEvent.getLatitude(), prevOffEvent.getLongitude());
                     },
-                    () -> log.error("직전 시동 OFF 정보가 없습니다.") // TODO : 최초 시동일 경우일 것 같은데....error로 해야할 것인가...
+                    () -> {
+                        // 규격서: "설치 후, 최초 시동 ON의 경우 그 전에 저장된 GPS 데이터가 없기 때문에 위경도 없이 보낸다. (상태값은 V, GPS 장치 인식 안된 경우는 0)"
+                        log.info("이전 OFF가 없다는건..생애최초 시동 걸었다는 이야기인데.. GPS마저 비정상이라면 그냥 0,0 으로 ");
+                        eventLog.adjustGpsPosition(0.0, 0.0);
+                    }
             );
-        }
-
-        // 규격서: "설치 후, 최초 시동 ON의 경우 그 전에 저장된 GPS 데이터가 없기 때문에 위경도 없이 보낸다. (상태값은 V, GPS 장치 인식 안된 경우는 0)"
-        long ignitionOnCount = vehicleEventLogRepository.countByMdnAndEventType(eventLog.getMdn(), VehicleEventType.IGNITION_ON);
-        boolean isOnForTheFirstTime = ignitionOnCount == 0L;
-
-        if (isOnForTheFirstTime) {
-            eventLog.adjustGpsPosition(0.0, 0.0);
         }
 
         vehicleEventLogRepository.save(eventLog);

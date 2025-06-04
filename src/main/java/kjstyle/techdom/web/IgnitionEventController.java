@@ -27,7 +27,10 @@ public class IgnitionEventController {
     @PostMapping("/api/v1/vehicle/ignition")
     public ResponseEntity<EventResponse> ignition(@Valid @RequestBody IgnitionEventRequest request) { // TODO : 응답을 어떻게 해야할지
         log.info("시동 이벤트 수신 : {} ", request);
+        log.info("/api/v1/vehicle/ignition received event on controller : {} [ThreadId: {}]", request, Thread.currentThread().getId());
+        log.info("--------------- 이벤트 퍼블리싱 직전");
         eventPublisher.publishEvent(request.toVehicleEventLog()); // TODO : 서비스로 빼는게 맞는걸까?
+        log.info("--------------- 이벤트 퍼블리싱 직후");
         return new ResponseEntity<>(
                 new EventResponse("200", "OK", request.getMdn())
                 , HttpStatus.OK

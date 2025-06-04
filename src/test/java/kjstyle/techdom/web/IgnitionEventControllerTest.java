@@ -73,8 +73,8 @@ class IgnitionEventControllerTest extends BaseMockMvcTest {
                     eventLog -> {
                         assertThat(eventLog.getMdn()).isEqualTo(req.getMdn());
                         assertThat(eventLog.getEventType()).isEqualTo(VehicleEventType.IGNITION_ON);
-                        assertThat(eventLog.getLatitude()).isEqualTo(0.0); // 이전 기록이 없을거라 0.0
-                        assertThat(eventLog.getLongitude()).isEqualTo(0.0); // 이전 기록이 없을거라 0.0
+                        assertThat(eventLog.getLatitude()).isEqualTo(37.5665); // 최초이지만 GPS정상 케이스라
+                        assertThat(eventLog.getLongitude()).isEqualTo(126.9780); // 최초이지만 GPS정상 케이스라
                         assertThat(eventLog.getBatteryVolt()).isEqualTo(Integer.valueOf(req.getBatteryVolt()));
                         assertThat(eventLog.getSpeed()).isEqualTo(Integer.valueOf(req.getSpd()));
                         assertThat(eventLog.getCurrentAccumulatedDistance()).isEqualTo(Long.valueOf(req.getSum()));
