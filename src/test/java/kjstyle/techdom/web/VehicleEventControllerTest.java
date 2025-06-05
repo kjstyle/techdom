@@ -8,9 +8,16 @@ import kjstyle.techdom.web.dto.GeofenceEventRequest;
 import kjstyle.techdom.web.dto.IgnitionEventRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.ResultActions;
+import org.testcontainers.containers.KafkaContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
+import org.testcontainers.utility.DockerImageName;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -22,6 +29,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@Testcontainers
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class VehicleEventControllerTest extends BaseMockMvcTest {
 
     @Autowired
@@ -29,6 +38,18 @@ class VehicleEventControllerTest extends BaseMockMvcTest {
 
     @Autowired
     private VehicleEventLogService vehicleEventLogService;
+
+
+    @Container
+    static KafkaContainer kafka = new KafkaContainer(
+            DockerImageName.parse("confluentinc/cp-kafka:7.6.1")
+    );
+
+    @DynamicPropertySource
+    static void configure(DynamicPropertyRegistry registry) {
+        kafka.start(); // 컨테이너를 명시적으로 시작
+        registry.add("spring.kafka.bootstrap-servers", kafka::getBootstrapServers);
+    }
 
     @Test
     @DisplayName("시동 ON 이벤트 보내고 -> 잘 처리되었는지 확인하기")
