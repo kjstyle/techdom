@@ -1,4 +1,13 @@
 spring:
+  task:
+    execution:
+      pool:
+        core-size: 2          # 기본 스레드 수
+        max-size: 10          # 최대 스레드 수
+        queue-capacity: 100   # 작업 큐 용량 (기본값은 Integer.MAX_VALUE로 무제한에 가깝게 설정됨)
+        keep-alive: 60s
+      rejection-policy: CALLER_RUNS # 작업이 버려지지 않고 호출 스레드에서 직접 실행됨
+
   datasource:
     # H2 데이터베이스 설정
     url: jdbc:h2:mem:testdb;MODE=PostgreSQL;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
